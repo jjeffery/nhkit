@@ -28,9 +28,7 @@ namespace NHKit.Internal
 	/// </typeparam>
 	public class IdHelperForValueType<TId> : IIdHelper<TId> where TId : struct, IComparable
 	{
-		// ReSharper disable StaticFieldInGenericType
 		private static readonly object BoxedDefaultType = default(TId);
-		// ReSharper restore StaticFieldInGenericType
 
 		public bool IsDefaultValue(TId id)
 		{

@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Reflection;
 using NHKit.Internal;
 
 namespace NHKit
@@ -43,11 +42,7 @@ namespace NHKit
         where TEntity : NHEntity<TEntity, TId>
         where TId : IComparable
     {
-#pragma warning disable 649
-        // This field gets set via reflection.
-        // ReSharper disable once UnassignedReadonlyField
         protected static readonly IIdHelper<TId> IdHelper;
-#pragma warning restore 649
 
         /// <summary>
         /// Return the entity unique ID.
@@ -66,53 +61,38 @@ namespace NHKit
 
         static NHEntity()
         {
-            if (IdHelper == null)
+            var idType = typeof(TId);
+            Type idHelperType;
+            if (idType == typeof(string))
             {
-                var type = typeof(NHEntity<TEntity, TId>);
-                var field = type.GetField(nameof(IdHelper), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-                // field will not be null, so disable warnings about a possible NRE
-                // ReSharper disable PossibleNullReferenceException
-
-                var idType = typeof(TId);
-                if (idType == typeof(string))
-                {
-                    // Special case for string, as identifiers are compared
-                    // ordinal case-insensitive.
-                    var helper = new IdHelperForString();
-                    field.SetValue(null, helper);
-                }
-                else if (idType == typeof(int))
-                {
-                    // Special case for int as many identifiers are this type.
-                    // This class avoids boxing altogether.
-                    var helper = new IdHelperForInt32();
-                    field.SetValue(null, helper);
-                }
-                else if (idType == typeof(long))
-                {
-                    // Special case for long as some identifiers are this type.
-                    // This class avoids boxing altogether.
-                    var helper = new IdHelperForInt64();
-                    field.SetValue(null, helper);
-                }
-                else if (idType.IsValueType)
-                {
-                    // Value types get an ID helper that does not involve boxing.
-                    var helperType = typeof(IdHelperForValueType<>);
-                    var genericType = helperType.MakeGenericType(new[] { typeof(TId) });
-                    var helper = Activator.CreateInstance(genericType, null);
-                    field.SetValue(null, helper);
-                }
-                else
-                {
-                    // ID helper type for classes that can have null value
-                    var helperType = typeof(IdHelperForClassType<>);
-                    var genericType = helperType.MakeGenericType(new[] { typeof(TId) });
-                    var helper = Activator.CreateInstance(genericType, null);
-                    field.SetValue(null, helper);
-                }
-                // ReSharper restore PossibleNullReferenceException
+                // Special case for string, as identifiers are compared
+                // ordinal case-insensitive.
+                idHelperType = typeof(IdHelperForString);
             }
+            else if (idType == typeof(int))
+            {
+                // Special case for int as many identifiers are this type.
+                // This class avoids boxing altogether.
+                idHelperType = typeof(IdHelperForInt32);
+            }
+            else if (idType == typeof(long))
+            {
+                // Special case for long as some identifiers are this type.
+                // This class avoids boxing altogether.
+                idHelperType = typeof(IdHelperForInt64);
+            }
+            else if (idType.IsValueType)
+            {
+                // Value types get an ID helper that does not involve boxing.
+                idHelperType = typeof(IdHelperForValueType<>).MakeGenericType(typeof(TId));
+            }
+            else
+            {
+                // ID helper type for classes that can have null value
+                idHelperType = typeof(IdHelperForClassType<>).MakeGenericType(typeof(TId));
+            }
+
+            IdHelper = (IIdHelper<TId>) Activator.CreateInstance(idHelperType);
         }
 
         /// <inheritdoc/>
