@@ -159,6 +159,28 @@ namespace NHKit.Tests
             }
 
             [Fact]
+            public void Entities_use_reference_equality_if_they_change_id()
+            {
+                var id1a = new Entity<TId>(Id1);
+                var id1b = new Entity<TId>(Id1);
+                var id2 = new Entity<TId>(Id2);
+
+                id1a.Equals(id1b).ShouldBeTrue();
+
+                // this will call GetHashCode()
+                var set = new HashSet<Entity<TId>> { id1a, id2 };
+
+                set.ShouldContain(id1b);
+
+                // now make id1a transient
+                id1a.SetId(DefaultId);
+
+                set.ShouldContain(id1a);
+                set.ShouldNotContain(id1b);
+                id1a.Equals(id1b).ShouldBeFalse();
+            }
+
+            [Fact]
             public void Different_classes_with_the_same_id_are_not_equal()
             {
                 var entity1 = new Entity<TId>(Id1);
@@ -204,6 +226,16 @@ namespace NHKit.Tests
                 (id2 != id1).ShouldBeFalse();
                 // ReSharper restore ConditionIsAlwaysTrueOrFalse
 
+                // Now change Id. Because id1 and id2 are the same
+                // object, they will still be equal.
+                id1.SetId(Id2);
+
+                // ReSharper disable ConditionIsAlwaysTrueOrFalse
+                (id1 == id2).ShouldBeTrue();
+                (id2 == id1).ShouldBeTrue();
+                (id1 != id2).ShouldBeFalse();
+                (id2 != id1).ShouldBeFalse();
+                // ReSharper restore ConditionIsAlwaysTrueOrFalse
             }
         }
 

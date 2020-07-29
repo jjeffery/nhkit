@@ -106,6 +106,9 @@ namespace NHKit
         // even if the entity Id changes.
         private int? _hashCode;
 
+        // Used to detect any change to the Id. For example transitioning from persistent back to transient.
+        private TId _originalId;
+
         // Set to true if the entity is transient the first time that GetHashCode() is called.
         private bool _isTransient;
 
@@ -118,19 +121,31 @@ namespace NHKit
             // ReSharper disable NonReadonlyFieldInGetHashCode
             if (_hashCode == null)
             {
-                // Obtain the entity ID. Note that it is assumed that once GetId returns a 
-                // non-default value, that value will not change in subsequent calls to GetId.
-                // So if, for example, GetId() returns 1 and then returns 2, this code will break.
-                var id = GetId();
+                // Obtain the entity Id. This is used in subsequent calls to detect a change
+                // of Id. Note that this code assumes that instances of type TId type are immutable.
+                _originalId = GetId();
 
                 // If the Id is the default value (0 in most cases), this means that the entity has not been
                 // persisted. If this is the case, default to reference equality.
-                _isTransient = IdHelper.IsDefaultValue(id);
+                _isTransient = IdHelper.IsDefaultValue(_originalId);
 
+                // If transient, use the base hash code. The reasoning here is that if we are putting one
+                // transient object into a set or dictionary, we are probably going to put lots of transient
+                // objects into collections. Use the base implementation so that all these transient objects
+                // do not return the same value for GetHashCode(), and cause the set/dictionary to perform like O(n).
                 // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
-                _hashCode = _isTransient ? base.GetHashCode() : IdHelper.GetHashCode(id);
+                _hashCode = _isTransient ? base.GetHashCode() : IdHelper.GetHashCode(_originalId);
+            }
+            else if (!IdHelper.AreEqual(GetId(), _originalId))
+            {
+                // The entity has changed Id. This could happen if it transitioned
+                // from persistent to transient. In this case, keep the original hash
+                // code, but use reference equality.
+                _isTransient = true;
             }
 
+            // R# thinks _hashCode might be null here, but it cannot be.
+            // ReSharper disable once PossibleInvalidOperationException
             return _hashCode.Value;
             // ReSharper restore NonReadonlyFieldInGetHashCode
         }
