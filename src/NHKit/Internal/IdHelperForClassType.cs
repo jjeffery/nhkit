@@ -29,26 +29,28 @@ namespace NHKit.Internal
 	public class IdHelperForClassType<TId> : IIdHelper<TId> where TId : class, IComparable
 	{
 		public bool IsDefaultValue(TId id)
-		{
-			return id == null;
-		}
+        {
+            return IsNull(id);
+        }
 
 		public bool IsNull(TId id)
-		{
-			return id == null;
+        {
+			// Convert to an object to avoid any overloaded operator==
+            var obj = (object) id;
+			return obj == null;
 		}
 
 		public int Compare(TId id1, TId id2)
 		{
-			if (id1 == null)
+			if (IsNull(id1))
 			{
-				if (id2 == null)
+				if (IsNull(id2))
 				{
 					return 0;
 				}
 				return -1;
 			}
-			if (id2 == null)
+			if (IsNull(id2))
 			{
 				return 1;
 			}
@@ -57,9 +59,9 @@ namespace NHKit.Internal
 
 		public bool AreEqual(TId id1, TId id2)
 		{
-			if (id1 == null)
+			if (IsNull(id1))
 			{
-				if (id2 == null)
+				if (IsNull(id2))
 				{
 					return true;
 				}
@@ -70,7 +72,7 @@ namespace NHKit.Internal
 
 		public int GetHashCode(TId id)
 		{
-			if (id == null)
+			if (IsNull(id))
 			{
 				return 0;
 			}
