@@ -24,7 +24,7 @@ namespace NHKit.Tests
                 return Id.CompareTo(other.Id);
             }
 
-            return -1;
+            return 1;
         }
 
         public override bool Equals(object obj)

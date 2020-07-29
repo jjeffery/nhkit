@@ -35,12 +35,7 @@ namespace NHKit.Internal
 			return id == null;
 		}
 
-		public bool IsNull(string id)
-		{
-			return id == null;
-		}
-
-		public int Compare(string id1, string id2)
+        public int Compare(string id1, string id2)
 		{
 			if (id1 == null)
 			{

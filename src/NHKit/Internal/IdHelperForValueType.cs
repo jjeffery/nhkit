@@ -35,12 +35,7 @@ namespace NHKit.Internal
 			return id.Equals(BoxedDefaultType);
 		}
 
-		public bool IsNull(TId id)
-		{
-			return false;
-		}
-
-		public virtual int Compare(TId id1, TId id2)
+        public virtual int Compare(TId id1, TId id2)
 		{
 			return id1.CompareTo(id2);
 		}

@@ -30,12 +30,7 @@ namespace NHKit.Internal
 			return id == 0;
 		}
 
-		public bool IsNull(long id)
-		{
-			return false;
-		}
-
-		public virtual int Compare(long id1, long id2)
+        public virtual int Compare(long id1, long id2)
 		{
 			return id1.CompareTo(id2);
 		}

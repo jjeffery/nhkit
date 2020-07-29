@@ -241,11 +241,6 @@ namespace NHKit.Tests
             {
                 return Id;
             }
-
-            public void SetId(TId id)
-            {
-                Id = id;
-            }
         }
 
 

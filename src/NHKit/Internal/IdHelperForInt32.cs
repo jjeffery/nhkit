@@ -30,12 +30,7 @@ namespace NHKit.Internal
 			return id == 0;
 		}
 
-		public bool IsNull(int id)
-		{
-			return false;
-		}
-
-		public virtual int Compare(int id1, int id2)
+        public virtual int Compare(int id1, int id2)
 		{
 			return id1 - id2;
 		}

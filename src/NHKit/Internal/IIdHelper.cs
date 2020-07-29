@@ -16,18 +16,20 @@
 
 #endregion
 
+using System;
+
 namespace NHKit.Internal
 {
 	/// <summary>
 	/// Interface that provides helper methods for NHibernate identity values.
 	/// </summary>
 	/// <typeparam name="TId">
-	/// Type of entity identifer, usually <c>int</c> or <c>string</c>.
+	/// Type of entity identifier, typically <c>int</c> or <c>string</c>, but
+	/// can be any comparable type.
 	/// </typeparam>
-	public interface IIdHelper<in TId>
+	public interface IIdHelper<in TId> where TId : IComparable
 	{
 		bool IsDefaultValue(TId id);
-		bool IsNull(TId id);
 		int Compare(TId id1, TId id2);
 		bool AreEqual(TId id1, TId id2);
 		int GetHashCode(TId id);

@@ -33,13 +33,6 @@ namespace NHKit.Internal
             return IsNull(id);
         }
 
-		public bool IsNull(TId id)
-        {
-			// Convert to an object to avoid any overloaded operator==
-            var obj = (object) id;
-			return obj == null;
-		}
-
 		public int Compare(TId id1, TId id2)
 		{
 			if (IsNull(id1))
@@ -78,5 +71,12 @@ namespace NHKit.Internal
 			}
 			return id.GetHashCode();
 		}
+
+        private bool IsNull(TId id)
+        {
+            // Convert to an object to avoid any overloaded operator==
+            var obj = (object)id;
+            return obj == null;
+        }
 	}
 }

@@ -30,7 +30,6 @@ namespace NHKit.Tests
         {
             var helper = new IdHelperForValueType<short>();
 
-            helper.IsNull(0).ShouldBeFalse();
             helper.IsDefaultValue(0).ShouldBeTrue();
             helper.IsDefaultValue(1).ShouldBeFalse();
             helper.AreEqual(0, 0).ShouldBeTrue();
@@ -48,7 +47,6 @@ namespace NHKit.Tests
         {
             var helper = new IdHelperForInt64();
 
-            helper.IsNull(0).ShouldBeFalse();
             helper.IsDefaultValue(0).ShouldBeTrue();
             helper.IsDefaultValue(1).ShouldBeFalse();
             helper.AreEqual(0, 0).ShouldBeTrue();
@@ -66,7 +64,6 @@ namespace NHKit.Tests
         {
             var helper = new IdHelperForInt32();
 
-            helper.IsNull(0).ShouldBeFalse();
             helper.IsDefaultValue(0).ShouldBeTrue();
             helper.IsDefaultValue(1).ShouldBeFalse();
             helper.AreEqual(0, 0).ShouldBeTrue();
@@ -87,8 +84,6 @@ namespace NHKit.Tests
             var guid1 = new Guid("005faa88-a529-4065-9d04-72a96316988b");
             var guid2 = new Guid("64b9dd7a-f46e-448b-b6e5-ddd3f83ec508");
 
-
-            helper.IsNull(Guid.Empty).ShouldBeFalse();
             helper.IsDefaultValue(Guid.Empty).ShouldBeTrue();
             helper.IsDefaultValue(guid1).ShouldBeFalse();
             helper.AreEqual(Guid.Empty, Guid.Empty).ShouldBeTrue();
@@ -109,7 +104,6 @@ namespace NHKit.Tests
 
             // ReSharper disable StringLiteralTypo
             // ReSharper disable ExpressionIsAlwaysNull
-            helper.IsNull(defaultValue).ShouldBeTrue();
             helper.IsDefaultValue(defaultValue).ShouldBeTrue();
             helper.IsDefaultValue("XX").ShouldBeFalse();
             helper.AreEqual(defaultValue, defaultValue).ShouldBeTrue();
@@ -138,7 +132,6 @@ namespace NHKit.Tests
             var id2 = new ClassId(2);
 
             // ReSharper disable ExpressionIsAlwaysNull
-            helper.IsNull(idDefault).ShouldBeTrue();
             helper.IsDefaultValue(idDefault).ShouldBeTrue();
             helper.IsDefaultValue(id1).ShouldBeFalse();
             helper.AreEqual(idDefault, idDefault).ShouldBeTrue();
