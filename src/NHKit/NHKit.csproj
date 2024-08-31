@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.3.0</Version>
     <Authors>John Jeffery</Authors>
     <Company>Software Projects Pty Ltd</Company>
-    <Description>Provides a base entity class that implements equality as required by NHibernate.</Description>
+    <Description>Provides common NHibernate functionality.</Description>
     <PackageLicenseExpression>Apache-2.0+</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jjeffery/nhkit</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jjeffery/nhkit</RepositoryUrl>
@@ -16,10 +15,17 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <LangVersion>12</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Internal\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentNHibernate" Version="3.4.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
   </ItemGroup>
 
 </Project>
